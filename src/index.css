@@ -1,0 +1,28 @@
+* {
+  box-shadow: none !important;
+}
+
+textarea {
+  resize: none;
+}
+
+.content-wrapper {
+  height: 100vh;
+  justify-content: center;
+}
+
+.content-wrapper .page-content {
+  height: 100%;
+  width: 100%;
+  max-width: 800px;
+}
+
+.content-wrapper .page-content .page {
+  height: 100%;
+  width: 100%;
+}
+
+.group-switch {
+  align-items: center;
+  height: 38px;
+}

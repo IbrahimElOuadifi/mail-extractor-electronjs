@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Extractions</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="index.css" />
+    <script defer src="renderer.js"></script>
+  </head>
+  <body>
+    <div class="content-wrapper d-flex flex-row">
+      <div class="page-content p-4">
+        <div class="d-flex justify-content-between py-2">
+          <h5>Extractions</h5>
+        </div>
+        <form class="p-2 mt-5">
+          <div class="row mb-4">
+            <div class="col-3">
+              <div>
+                <input type="button" class="form-control" id="select-seeds" value="Select Seeds" />
+              </div>
+            </div>
+            <div class="col-3"></div>
+          </div>
+          <div class="form-group mb-4">
+            <textarea class="form-control" id="seeds-list" rows="10" placeholder="List of seeds(exemple@gmail.com:password)"></textarea>
+          </div>
+          <div class="row mb-4">
+            <div class="col-8">
+              <div class="form-group">
+                <input type="text" readonly class="form-control text-center" id="input-status" />
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary form-control" id="start-btn">Start</button>
+                <button type="button" class="btn btn-danger form-control d-none" id="stop-btn">Stop</button>
+                </div>
+              </div>
+          </div>
+        </form>
+    </div>
+  </div>
+  </body>
+</html>
