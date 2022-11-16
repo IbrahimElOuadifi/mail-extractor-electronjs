@@ -1,6 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const Store = require('electron-store')
 const path = require('path')
-const { watchInbox, watchSpam, watchTrash } = require('./gmail.js')
+const { writeFile } = require('fs/promises')
+const { watchEMail } = require('./gmail.js')
 
 const devTools = false
 
@@ -49,11 +51,34 @@ app.on('activate', () => {
 
 ipcMain.on('start-watch', async ({ sender, reply }, { user, password }) => {
   try {
-    await watchInbox(sender, { user, password })
-    await watchSpam(sender, { user, password })
-    await watchTrash(sender, { user, password })
+    await watchEMail(sender, { user, password })
+    new Store().set('get-user-and-pass', JSON.stringify({ user, password }))
     reply('is-watching')
-  } catch (err) {
-    console.log(err.message)
+  } catch ({ message }) {
+    console.log(message)
+    reply('log-error')
+    dialog.showErrorBox('error', message)
   }
+})
+
+ipcMain.on('save-extract-data', async ({ reply }, { extract_data }) => {
+  if(!extract_data.length) return dialog.showErrorBox('data is empty', 'can\'not save a empty data!')
+  const { response } = await dialog.showMessageBox({ title: 'save as', buttons: ['CANCEL', 'TEXT', 'JSON'], minimizable: true, closable: false})
+  if(response === 1) {
+    const { filePath, canceled } = await dialog.showSaveDialog({ defaultPath: `${ app.getPath('documents')}\\extraction-result.txt` })
+    if(canceled) return console.log('canceled')
+    await writeFile(filePath, extract_data.map(({ ip }) => ip).join('\n'), { encoding: 'utf-8' })
+    console.log(`saved on ${filePath}`)
+  } else if(response === 2){
+    const { filePath, canceled } = await dialog.showSaveDialog({ defaultPath: `${ app.getPath('documents')}\\extraction-result.json` })
+    if(canceled) return console.log('canceled')
+    await writeFile(filePath, JSON.stringify(extract_data), { encoding: 'utf-8' })
+    console.log(`saved on ${filePath}`)
+  } else {
+    console.log('cancel!')
+  }
+})
+
+ipcMain.once('get-user-and-pass', ({ reply }) => {
+  if(new Store().has('get-user-and-pass')) reply('set-user-and-pass', JSON.parse(new Store().get('get-user-and-pass')))
 })
