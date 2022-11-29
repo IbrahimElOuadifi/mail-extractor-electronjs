@@ -31,9 +31,11 @@ clear_button.addEventListener('click', () => {
     text_status.value = ''
 })
 
-copy_button.addEventListener('click', () => {
-    text_status.setSelectionRange(0, 9999)
+copy_button.addEventListener('click', ({ target }) => {
     navigator.clipboard.writeText(text_status.value)
+    text_status.select()
+    target.innerText = 'Copied'
+    setTimeout(() => target.innerText = 'Copy', 1000)
 })
 
 save_button.addEventListener('click', () => ipcRenderer.send('save-extract-data', { extract_data }))
